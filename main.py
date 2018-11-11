@@ -36,12 +36,13 @@ class Square:
     font = pg.font.SysFont('Arial', 10)
     coords = font.render(self.label, False, self.text_color)
     self.piece.draw()
-    self.surface.blit(coords, (5,5))
-    self.surface.blit(self.piece.surface, (10,10))
+    self.surface.blit(coords, (self.pad/2, self.pad/2))
+    self.surface.blit(self.piece.surface, (self.pad, self.pad))
 
-  def can_grab(self, coords):
-    if(self.piece and coords[0] > self.x and coords[0] < self.x + self.size - 10 and  coords[1] > self.y and coords[1] < self.y + self.size - 10):
-      return True
+  def piece_hovering(self, coords):
+    in_x = coords[0] > self.x and coords[0] < self.x + self.size - self.pad
+    in_y = coords[1] > self.y and coords[1] < self.y + self.size - self.pad
+    return self.piece and in_x and in_y
 
 class Board:
   bg_color = (255,255,255)
@@ -69,6 +70,7 @@ class Board:
           'size': sq_size,
           'x': x*sq_size - sq_size, 
           'y': y*sq_size - sq_size,
+          'pad': sq_size-10
           'color': self.dark if alter else self.light,
           'text_color': self.light if alter else self.dark,
           'label': str(chr(73-y)) + str(x)
@@ -135,7 +137,7 @@ class Game():
             sq = board.get_square(pos)
             if(click):
               pg.mouse.set_cursor(*GRAB_CURSOR)
-            elif(sq.can_grab(pos)):
+            elif(sq.piece_hovering(pos)):
               pg.mouse.set_cursor(*HAND_CURSOR)
             else:
               pg.mouse.set_cursor(*DEFAULT_CURSOR)
