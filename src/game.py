@@ -27,31 +27,32 @@ class Game():
       for event in pg.event.get():
         if event.type == pg.QUIT:
           run = False
+        elif event.type == pg.MOUSEBUTTONUP:
+          sq = board.get_square(event.pos)
 
-        elif event.type == pg.MOUSEBUTTONDOWN or \
-          event.type == pg.MOUSEBUTTONUP:
-          if(self.is_move(board, event.pos)):
-            sq = board.get_square(event.pos)
-            if(event.button == 1 and sq.piece_hovering(event.pos)):
-              pg.mouse.set_cursor(*GRAB_CURSOR)
-            else:
-              pg.mouse.set_cursor(*DEFAULT_CURSOR)
-
-        elif event.type == pg.MOUSEMOTION:
-          # board moves
-          if(self.is_move(board, event.pos)):
-            sq = board.get_square(event.pos)
-            if(sq.piece_hovering(event.pos)):
-              pg.mouse.set_cursor(*HAND_CURSOR)
-              if(event.buttons[0] == 1):
-                pg.mouse.set_cursor(*GRAB_CURSOR)
-            else:
-              pg.mouse.set_cursor(*DEFAULT_CURSOR)
-
+          if(self.is_move(board, event.pos) and sq.has_hover(event.pos)):
+            pg.mouse.set_cursor(*HAND_CURSOR)
             players[0].move({ 
                 'board_click': True, 
                 'pos': event.pos 
               })
+        elif event.type == pg.MOUSEBUTTONDOWN:
+          sq = board.get_square(event.pos)
+
+          if(self.is_move(board, event.pos) and sq.has_hover(event.pos)):
+            pg.mouse.set_cursor(*GRAB_CURSOR)
+        elif event.type == pg.MOUSEMOTION:
+          
+          if(self.is_move(board, event.pos)):
+            sq = board.get_square(event.pos)
+
+            if(sq.has_hover(event.pos)):
+              if(event.buttons[0] == 1):
+                pg.mouse.set_cursor(*GRAB_CURSOR)
+              else:
+                pg.mouse.set_cursor(*HAND_CURSOR)
+            else:
+              pg.mouse.set_cursor(*DEFAULT_CURSOR)
           else:
             pg.mouse.set_cursor(*DEFAULT_CURSOR)
 

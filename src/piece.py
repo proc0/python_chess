@@ -15,3 +15,4 @@ class Piece(pg.sprite.Sprite):
 
   def draw(self):
     self.surface.blit(self.piece_png, (0,0))
+    return self
