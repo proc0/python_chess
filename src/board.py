@@ -36,6 +36,7 @@ class Board:
       row = []
       for x in sq_range:
         alter = is_even(x) if is_even(y) else not is_even(x)
+        
         sq = Square({
           'size': sq_size,
           '_x' : x-1,
@@ -44,7 +45,7 @@ class Board:
           'y': y*sq_size - sq_size,
           'pad': 12, 
           'piece': Piece() if INITBOARD[y-1][x-1] == 1 else None,
-          'color': DARK if alter else LIGHT,
+          'color': DARK if is_even(x) else LIGHT,
           'text_color': LIGHT if alter else DARK,
           'label': str(chr(73-y)) + str(x)
         })
