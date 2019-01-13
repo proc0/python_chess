@@ -1,2 +1,13 @@
-# python_chess
-Chess using py.game
+# Python Chess UI
+
+## Requirements
+
+pygame
+
+## Run
+```bash
+pip install pygame
+python main.py
+```
+## Test
+
