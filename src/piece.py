@@ -3,10 +3,11 @@ import pygame as pg
 from pygame import Surface
 
 class Piece(pg.sprite.Sprite):
-  def __init__(self):
+  def __init__(self, props):
+    for k, v in props.items():
+      setattr(self, k, v)
+
     pg.sprite.Sprite.__init__(self)
-    # for k, v in props.items():
-    #   setattr(self, k, v)
     piece_path = os.path.join('images', 'bb3.png')
     piece_png = pg.image.load(piece_path)
     piece_rect = piece_png.get_rect()

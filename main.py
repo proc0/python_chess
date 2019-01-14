@@ -21,7 +21,7 @@ def main():
   size = SIZE
   # init game
   game = Game(size)
-  board = Board(size)
+  board = Board((size[1], size[1]))
   # init render
   board.draw()
   game.draw(board)

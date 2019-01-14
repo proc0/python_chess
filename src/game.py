@@ -7,7 +7,7 @@ class Game():
   def __init__(self, win_size):
     game_title = "python chess"
     logo_src = "logo.png"
-    os.environ['SDL_VIDEODRIVER'] = 'directx'
+    # os.environ['SDL_VIDEODRIVER'] = 'directx'
     # load and set the logo
     pg.display.set_icon(pg.image.load(logo_src))
     pg.display.set_caption(game_title)
@@ -16,10 +16,6 @@ class Game():
   def draw(self, board):
       self.display.blit(board.surface, board.surface.get_rect())
 
-  def is_move(self, board, action):
-    if(action[0] < board.size[0] and action[1] < board.size[1]):
-      return True
-
   def loop(self, board, players):
     run = True
     DEFAULT_CURSOR = pg.mouse.get_cursor()
@@ -27,28 +23,32 @@ class Game():
       for event in pg.event.get():
         if event.type == pg.QUIT:
           run = False
-        elif event.type == pg.MOUSEBUTTONUP:
-          sq = board.get_square(event.pos)
 
-          if(self.is_move(board, event.pos) and sq.has_hover(event.pos)):
+        elif event.type == pg.MOUSEBUTTONUP:
+          if(board.has(event.pos) and board.get_sq(event.pos).has(event.pos)):
             pg.mouse.set_cursor(*HAND_CURSOR)
             players[0].move({ 
                 'board_click': True, 
                 'pos': event.pos 
               })
+
         elif event.type == pg.MOUSEBUTTONDOWN:
-          sq = board.get_square(event.pos)
-
-          if(self.is_move(board, event.pos) and sq.has_hover(event.pos)):
+          if(board.has(event.pos) and board.get_sq(event.pos).has(event.pos)):
             pg.mouse.set_cursor(*GRAB_CURSOR)
-        elif event.type == pg.MOUSEMOTION:
-          
-          if(self.is_move(board, event.pos)):
-            sq = board.get_square(event.pos)
 
-            if(sq.has_hover(event.pos)):
-              if(event.buttons[0] == 1):
+        elif event.type == pg.MOUSEMOTION:
+          if(board.has(event.pos)):
+            sq = board.get_sq(event.pos)
+            is_left_click = event.buttons[0] == 1
+
+            if(sq.has(event.pos)):
+              sq.remove_piece()
+              board.draw()
+              self.draw(board)
+
+              if(is_left_click):
                 pg.mouse.set_cursor(*GRAB_CURSOR)
+                # sq.piece = None
               else:
                 pg.mouse.set_cursor(*HAND_CURSOR)
             else:
