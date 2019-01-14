@@ -20,10 +20,12 @@ class Square:
     self.surface.blit(font_surface, (self.pad/2, self.pad/2))
 
   def remove_piece(self):
+    p = None
     if(self.piece):
-      # self.piece.surface.fill(self.color)
+      p = self.piece
       self.piece = None
       self.surface.fill(self.color)
+    return p
 
   def has(self, pos):
     in_x = pos[0] > self.x + self.pad and pos[0] < self.x + self.size - self.pad

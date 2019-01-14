@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame import Surface
 from math import floor
+from pprint import pprint
 
 from src.basic import is_even
 from src.square import Square
@@ -65,10 +66,13 @@ class Board:
           row.append(sq)
         else:
           sq = self.squares[_y][_x]
-          
+          row.append(sq)
+
         sq.draw()
 
       if(len(self.squares) < 64):
         self.squares.append(row)
-        row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
-        self.surface.blits(row_blits)
+        
+      row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
+      self.surface.blits(row_blits)
+    

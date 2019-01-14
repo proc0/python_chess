@@ -20,11 +20,11 @@ def main():
   pg.font.init()
   size = SIZE
   # init game
-  game = Game(size)
   board = Board((size[1], size[1]))
+  game = Game(size, board)
   # init render
-  board.draw()
-  game.draw(board)
+  # board.draw()
+  # game.draw(board)
   # summon players
   players = list(map(summon, PLAYERS))
   # begin game

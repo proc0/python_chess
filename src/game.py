@@ -4,17 +4,19 @@ from cursors import HAND_CURSOR, GRAB_CURSOR
 
 class Game():
   display = None
-  def __init__(self, win_size):
+  def __init__(self, win_size, board):
     game_title = "python chess"
     logo_src = "logo.png"
     # os.environ['SDL_VIDEODRIVER'] = 'directx'
     # load and set the logo
     pg.display.set_icon(pg.image.load(logo_src))
     pg.display.set_caption(game_title)
+    self.board = board
+    self.board.draw()
     self.display = pg.display.set_mode(win_size)
 
-  def draw(self, board):
-      self.display.blit(board.surface, board.surface.get_rect())
+  def draw(self):
+      self.display.blit(self.board.surface, self.board.surface.get_rect())
 
   def loop(self, board, players):
     run = True
@@ -42,19 +44,24 @@ class Game():
             is_left_click = event.buttons[0] == 1
 
             if(sq.has(event.pos)):
-              sq.remove_piece()
-              board.draw()
-              self.draw(board)
-
               if(is_left_click):
                 pg.mouse.set_cursor(*GRAB_CURSOR)
-                # sq.piece = None
+                players[0].piece = sq.remove_piece()
+                # players[0].piece.draw()
+                board.surface.blit(players[0].piece.surface, event.pos)
               else:
                 pg.mouse.set_cursor(*HAND_CURSOR)
+            elif(players[0].piece):
+              if(is_left_click):
+                pg.mouse.set_cursor(*GRAB_CURSOR)
+                # players[0].piece.draw()
+                board.surface.blit(players[0].piece.surface, event.pos)              
             else:
               pg.mouse.set_cursor(*DEFAULT_CURSOR)
           else:
             pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
+      board.draw()
+      self.draw()
       pg.display.flip()
     return run
