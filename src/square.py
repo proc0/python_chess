@@ -9,15 +9,19 @@ class Square:
       setattr(self, k, v)
     self.surface = Surface((self.size, self.size))
     self.surface.fill(self.color)
+    self.draw()
 
   def draw(self):
+    if(self.piece):
+      piece_rect = self.piece.piece_png.get_rect()
+      self.piece.draw()
+      self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
+    self.draw_coords()
+
+  def draw_coords(self):
     font = pg.font.SysFont('Arial', 10)
     font_surface = font.render(self.label, False, self.text_color)
-
-    if(self.piece):
-      self.piece.draw()
-      self.surface.blit(self.piece.surface, (self.pad, self.pad))
-    self.surface.blit(font_surface, (self.pad/2, self.pad/2))
+    self.surface.blit(font_surface, (self.pad, self.size - self.pad*2))
 
   def remove_piece(self):
     p = None
@@ -25,7 +29,15 @@ class Square:
       p = self.piece
       self.piece = None
       self.surface.fill(self.color)
+      self.draw_coords()
     return p
+
+  def place_piece(self, piece):
+    self.piece = piece
+    self.piece.x = self.x
+    self.piece.y = self.y    
+    self.surface.blit(self.piece.surface, (self.pad, self.pad))
+    self.draw_coords()
 
   def has(self, pos):
     in_x = pos[0] > self.x + self.pad and pos[0] < self.x + self.size - self.pad

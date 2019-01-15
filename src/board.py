@@ -23,6 +23,7 @@ INITBOARD = [
 class Board:
   squares = []
   pieces = []
+  piece = None
 
   def __init__(self, size):
     self.size = size
@@ -57,7 +58,7 @@ class Board:
             '_y' : _y,
             'x': tx, 
             'y': ty,
-            'pad': 12, 
+            'pad': 6, 
             'piece': Piece({ 'x': tx, 'y': ty }) if INITBOARD[_y][_x] == 1 else None,
             'color': DARK if toggle_color else LIGHT,
             'text_color': LIGHT if toggle_color else DARK,
@@ -68,11 +69,15 @@ class Board:
           sq = self.squares[_y][_x]
           row.append(sq)
 
-        sq.draw()
+        # sq.draw()
 
       if(len(self.squares) < 64):
         self.squares.append(row)
-        
+
       row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
       self.surface.blits(row_blits)
+
+    if(self.piece):
+      self.surface.blit(self.piece.surface, (self.piece.x, self.piece.y))              
+
     

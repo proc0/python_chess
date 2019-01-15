@@ -6,8 +6,5 @@ class Player:
     for k, v in props.items():
       setattr(self, k, v)
 
-  def move(self, player_action):
-    if(player_action['board_click']):
-      self.history.append({
-        'pos': player_action['pos']
-        })
+  def move(self, square):
+      self.history.append(square)

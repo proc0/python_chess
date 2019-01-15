@@ -2,6 +2,12 @@ import os
 import pygame as pg
 from cursors import HAND_CURSOR, GRAB_CURSOR
 
+def move_piece(event, piece):
+  piece_rect = piece.piece_png.get_rect()
+  piece.x = event.pos[0] - piece_rect[2]/2
+  piece.y = event.pos[1] - piece_rect[3]/2
+  return piece
+
 class Game():
   display = None
   def __init__(self, win_size, board):
@@ -16,23 +22,27 @@ class Game():
     self.display = pg.display.set_mode(win_size)
 
   def draw(self):
+      self.board.draw()
       self.display.blit(self.board.surface, self.board.surface.get_rect())
 
   def loop(self, board, players):
     run = True
     DEFAULT_CURSOR = pg.mouse.get_cursor()
+    player = players[0]
     while run:
       for event in pg.event.get():
         if event.type == pg.QUIT:
           run = False
 
         elif event.type == pg.MOUSEBUTTONUP:
-          if(board.has(event.pos) and board.get_sq(event.pos).has(event.pos)):
+          if(board.has(event.pos)):
+            if(player.piece):
+              sq = board.get_sq(event.pos)
+              sq.place_piece(player.piece)
+              player.piece = None
+              board.piece = None
+              player.move(sq)
             pg.mouse.set_cursor(*HAND_CURSOR)
-            players[0].move({ 
-                'board_click': True, 
-                'pos': event.pos 
-              })
 
         elif event.type == pg.MOUSEBUTTONDOWN:
           if(board.has(event.pos) and board.get_sq(event.pos).has(event.pos)):
@@ -46,22 +56,19 @@ class Game():
             if(sq.has(event.pos)):
               if(is_left_click):
                 pg.mouse.set_cursor(*GRAB_CURSOR)
-                players[0].piece = sq.remove_piece()
-                # players[0].piece.draw()
-                board.surface.blit(players[0].piece.surface, event.pos)
+                player.piece = sq.remove_piece()
+                board.piece = move_piece(event, player.piece)
               else:
                 pg.mouse.set_cursor(*HAND_CURSOR)
-            elif(players[0].piece):
+            elif(player.piece):
               if(is_left_click):
                 pg.mouse.set_cursor(*GRAB_CURSOR)
-                # players[0].piece.draw()
-                board.surface.blit(players[0].piece.surface, event.pos)              
+                board.piece = move_piece(event, player.piece)            
             else:
               pg.mouse.set_cursor(*DEFAULT_CURSOR)
           else:
             pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
-      board.draw()
       self.draw()
       pg.display.flip()
     return run
