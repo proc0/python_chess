@@ -12,26 +12,22 @@ from src.player import Player
 SIZE = (800,640)
 PLAYERS = ['white', 'black']
 
-summon = lambda color: Player({ 'color': color })
+new_player = lambda color: Player({ 'color': color })
 
 def main(): 
-  # init pygame
+  # init
   pg.init()
   pg.font.init()
-  size = SIZE
-  # init game
-  board = Board((size[1], size[1]))
-  game = Game(size, board)
-  # init render
-  # board.draw()
-  # game.draw(board)
-  # summon players
-  players = list(map(summon, PLAYERS))
-  # begin game
-  game.loop(board, players)
-  # end
+  # setup
+  board = Board((SIZE[1], SIZE[1]))
+  game = Game(SIZE, board)
+  # ready
+  players = list(map(new_player, PLAYERS))
+  # begin
+  game.run(board, players)
+  # gg
   pg.quit()
-  quit()
+  return quit()
 
 if __name__=="__main__":
   main()
