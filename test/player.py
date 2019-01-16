@@ -1,5 +1,5 @@
 import unittest
-from src.player import Player
+from src.player import Player, new_players
 
 class TestPlayer(unittest.TestCase):
 
@@ -17,3 +17,8 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(len(mockPlayer.history), 2)
         self.assertEqual(mockPlayer.history[0], 1)
         self.assertEqual(mockPlayer.history[1], 2)
+
+    def test_summon_new_players(self):
+        mockPlayers = new_players(['blah', 'bleh'])
+        self.assertEqual(mockPlayers[0].color, 'blah')
+        self.assertEqual(mockPlayers[1].color, 'bleh')

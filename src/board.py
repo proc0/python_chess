@@ -26,7 +26,7 @@ class Board:
   piece = None
 
   def __init__(self, size):
-    self.size = size
+    self.size = (size, size)
     self.sq_size = int(self.size[1]/8)
     self.surface = Surface(self.size)
     self.surface.fill(LIGHT)

@@ -36,7 +36,8 @@ class Square:
     self.piece = piece
     self.piece.x = self.x
     self.piece.y = self.y    
-    self.surface.blit(self.piece.surface, (self.pad, self.pad))
+    piece_rect = self.piece.piece_png.get_rect()
+    self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
     self.draw_coords()
 
   def has(self, pos):

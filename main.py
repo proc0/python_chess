@@ -1,28 +1,21 @@
 #!/usr/bin/env python
-import os
 import pygame as pg
-from pygame import Surface
-from pprint import pprint
-# from functools import map
-
 from src.game import Game
 from src.board import Board
-from src.player import Player
+from src.player import new_players
 
 SIZE = (800,640)
 PLAYERS = ['white', 'black']
-
-new_player = lambda color: Player({ 'color': color })
 
 def main(): 
   # init
   pg.init()
   pg.font.init()
   # setup
-  board = Board((SIZE[1], SIZE[1]))
-  game = Game(SIZE, board)
+  board = Board(SIZE[1])
+  game = Game(SIZE)
   # ready
-  players = list(map(new_player, PLAYERS))
+  players = new_players(PLAYERS)
   # begin
   game.run(board, players)
   # gg

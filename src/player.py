@@ -1,4 +1,6 @@
 
+new_players = lambda colors: list(map(lambda color: Player({ 'color': color }), colors))
+
 class Player:
   history = []
   piece = None
