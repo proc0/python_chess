@@ -29,9 +29,9 @@ class Game():
     self.display = pg.display.set_mode(win_size)
     self.default_cursor = pg.mouse.get_cursor()
 
-  def draw(self):
-      self.board.draw()
-      self.display.blit(self.board.surface, self.board.surface.get_rect())
+  def draw(self, board):
+      board.draw()
+      self.display.blit(board.surface, board.surface.get_rect())
 
   def MouseButtonUp(self, event, player, board):
     pg.mouse.set_cursor(*HAND_CURSOR)
@@ -69,7 +69,7 @@ class Game():
 
   def run(self, board, players):
     player = players[0]
-    self.draw()
+    self.draw(board)
     quit = False
     while not quit:
       for event in pg.event.get():
@@ -80,5 +80,5 @@ class Game():
             handle = getattr(self, pg.event.event_name(event.type))
             handle(event, player, board)
 
-      self.draw()
+      self.draw(board)
       pg.display.flip()
