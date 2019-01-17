@@ -12,6 +12,7 @@ class Square:
     self.draw()
 
   def draw(self):
+    self.surface.fill(self.color)
     if(self.piece):
       piece_rect = self.piece.piece_png.get_rect()
       self.piece.draw()
@@ -24,19 +25,19 @@ class Square:
     self.surface.blit(font_surface, (self.pad, self.size - self.pad*2))
 
   def remove_piece(self):
-    p = None
+    _piece = None
     if(self.piece):
-      p = self.piece
+      _piece = self.piece
       self.piece = None
-      self.surface.fill(self.color)
-      self.draw_coords()
-    return p
+    self.draw()
+    return _piece
 
   def place_piece(self, piece):
     self.piece = piece
     self.piece.x = self.x
     self.piece.y = self.y    
     piece_rect = self.piece.piece_png.get_rect()
+    self.surface.fill(self.color)
     self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
     self.draw_coords()
 

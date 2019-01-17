@@ -68,8 +68,10 @@ class Game():
   def run(self, board, players):
     self.player = players[0]
     self.draw(board)
+    clock = pg.time.Clock()
     quit = False
     while not quit:
+      clock.tick(60)
       for event in pg.event.get():
         if event.type == pg.QUIT:
           quit = True
