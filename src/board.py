@@ -33,9 +33,6 @@ class Board:
     self.size = (size, size)
     self.sq_size = int(self.size[1]/8)
     self.surface = Surface(self.size)
-    # self.buffer = self.surface.get_buffer()
-    # self.piece_surface = self.surface.subsurface(self.surface.get_rect())
-    # self.surface.fill(LIGHT)
 
   def has(self, pos):
     return pos[0] < self.size[0] and pos[1] < self.size[1]
@@ -45,7 +42,13 @@ class Board:
     sq = self.squares[point(1)][point(0)]
     return sq
 
-  def draw(self, drop_piece = None):
+  def drop_piece(self, piece):
+    sq = self.get_sq((piece.x, piece.y))
+    print(sq.label)
+    sq.draw()
+    self.surface.blit(sq.surface, (sq.x, sq.y))
+
+  def draw(self):
     sq_pad = 6
     sq_range = range(1, 9)
 
@@ -72,9 +75,7 @@ class Board:
           }
           
           occupy = None
-          if(drop_piece):
-            occupy = drop_piece
-          elif(INITBOARD[_y][_x] == 1):
+          if(INITBOARD[_y][_x] == 1):
             occupy = Piece(pc_props)
 
           sq = Square({
@@ -94,18 +95,6 @@ class Board:
         self.squares.append(row)
         row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
         self.surface.blits(row_blits)
-
-    if(drop_piece):
-      sq = self.squares[floor(drop_piece.x/self.sq_size)][floor(drop_piece.y/self.sq_size)]
-      sq.draw()
-      self.surface.blit(sq.surface, (sq.x, sq.y))
-
-    #   row_blits = []
-    #   for row in self.squares:
-    #     for sq in row:
-    #       sq.draw()
-    #       row_blits.append((sq.surface, (sq.x, sq.y)))
-    #   self.surface.blits(row_blits)
 
     # if(self.piece or activity == 'DROP'):
     #   # xy = [2,1,0,-1,-2]
