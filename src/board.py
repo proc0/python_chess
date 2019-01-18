@@ -96,10 +96,10 @@ class Board:
         self.surface.blits(row_blits)
 
     if(drop_piece):
-      sq = self.squares[floor(drop_piece.y/self.sq_size)][floor(drop_piece.x/self.sq_size)]
+      sq = self.squares[floor(drop_piece.x/self.sq_size)][floor(drop_piece.y/self.sq_size)]
       sq.draw()
       self.surface.blit(sq.surface, (sq.x, sq.y))
-      
+
     #   row_blits = []
     #   for row in self.squares:
     #     for sq in row:
