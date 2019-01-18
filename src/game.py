@@ -25,15 +25,15 @@ class Game():
     pg.display.set_caption(game_title)
     # init display
     self.display = pg.display.set_mode(win_size)
-    self.default_cursor = pg.mouse.get_cursor()
+    self.cursor = pg.mouse.get_cursor()
 
   def draw(self, board):
       board.draw()
       self.display.blit(board.surface, board.surface.get_rect())
 
   def MouseButtonUp(self, event, board):
-    pg.mouse.set_cursor(*HAND_CURSOR)
     if(self.player.piece):
+      pg.mouse.set_cursor(*HAND_CURSOR)
       sq = board.get_sq(event.pos)
       sq.place_piece(self.player.piece)
       self.player.piece = board.piece = None
@@ -41,29 +41,21 @@ class Game():
 
   def MouseButtonDown(self, event, board):
     sq = board.get_sq(event.pos)
-    is_left_click = event.button == 1
-    if(is_left_click and sq.has(event.pos)):
+    is_leftclick = event.button == 1
+    if(is_leftclick and sq.piece and sq.has(event.pos)):
       pg.mouse.set_cursor(*GRAB_CURSOR)
       self.player.piece = sq.remove_piece()
       board.piece = move_piece(event, self.player.piece)
 
   def MouseMotion(self, event, board):
     sq = board.get_sq(event.pos)
-    is_left_click = event.buttons[0] == 1
-    if(sq.has(event.pos)):
-      # piece drag
-      if(is_left_click):
-        pg.mouse.set_cursor(*GRAB_CURSOR)
-        if(self.player.piece):
-          board.piece = move_piece(event, self.player.piece)
-      else: # piece hover
-        pg.mouse.set_cursor(*HAND_CURSOR)
-    # outer part of square
-    elif(is_left_click and self.player.piece):
-        pg.mouse.set_cursor(*GRAB_CURSOR)
-        board.piece = move_piece(event, self.player.piece)            
+    is_leftclick = event.buttons[0] == 1
+
+    if(is_leftclick and self.player.piece):        
+      board.piece = move_piece(event, self.player.piece)
     else:
-      pg.mouse.set_cursor(*self.default_cursor)
+      cursor = HAND_CURSOR if sq.piece else self.cursor
+      pg.mouse.set_cursor(*cursor)
 
   def run(self, board, players):
     self.player = players[0]

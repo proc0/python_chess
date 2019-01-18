@@ -8,16 +8,14 @@ class Square:
     for k, v in props.items():
       setattr(self, k, v)
     self.surface = Surface((self.size, self.size))
-    self.surface.fill(self.color)
-    self.draw()
 
   def draw(self):
     self.surface.fill(self.color)
+    self.draw_coords()
     if(self.piece):
       piece_rect = self.piece.piece_png.get_rect()
       self.piece.draw()
       self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
-    self.draw_coords()
 
   def draw_coords(self):
     font = pg.font.SysFont('Arial', 10)

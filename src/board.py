@@ -78,13 +78,15 @@ class Board:
             'label': str(chr(73-y)) + str(x)
           })
           row.append(sq)
+          sq.draw()
         else:
           sq = self.squares[_y][_x]
           if(self.piece and sq.piece and self.piece == sq.piece):
             sq.piece = None
           row.append(sq)
 
-        # sq.draw()
+      # print(sq.surface.get_bounding_rect())
+      # if(not sq.surface.get_buffer()):
 
       if(len(self.squares) < 64):
         self.squares.append(row)
