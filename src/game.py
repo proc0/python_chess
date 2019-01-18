@@ -18,59 +18,66 @@ class Game():
     'MouseMotion' ]
   
   def __init__(self, win_size):
-    game_title = "python chess"
-    logo_src = "logo.png"
-    # load and set the logo
-    pg.display.set_icon(pg.image.load(logo_src))
-    pg.display.set_caption(game_title)
-    # init display
     self.display = pg.display.set_mode(win_size)
     self.cursor = pg.mouse.get_cursor()
+    self.activity = 'IDLE'
 
   def draw(self, board):
+    if(len(board.squares) == 0):
       board.draw()
       self.display.blit(board.surface, board.surface.get_rect())
 
+    if(self.activity == 'MOVING' or self.activity == 'DROP'):
+      self.display.blit(board.surface, board.surface.get_rect())
+      if(self.activity != 'DROP'):
+        self.display.blit(self.player.piece.surface, (self.player.piece.x,  self.player.piece.y))
+      else:
+        board.draw(self.player.piece)
+        self.display.blit(board.surface, board.surface.get_rect())
+    
+    if(self.activity == 'DROP'):
+      self.activity = 'IDLE'
+
   def MouseButtonUp(self, event, board):
     if(self.player.piece):
+      self.activity = 'DROP'
       pg.mouse.set_cursor(*HAND_CURSOR)
       sq = board.get_sq(event.pos)
       sq.place_piece(self.player.piece)
-      self.player.piece = board.piece = None
+      self.player.piece = None
       self.player.move(sq)
 
   def MouseButtonDown(self, event, board):
     sq = board.get_sq(event.pos)
     is_leftclick = event.button == 1
-    if(is_leftclick and sq.piece and sq.has(event.pos)):
+    if(is_leftclick and sq.is_focused(event.pos)):
+      self.activity = 'MOVING'
       pg.mouse.set_cursor(*GRAB_CURSOR)
       self.player.piece = sq.remove_piece()
-      board.piece = move_piece(event, self.player.piece)
+      self.player.piece = move_piece(event, self.player.piece)
 
   def MouseMotion(self, event, board):
     sq = board.get_sq(event.pos)
     is_leftclick = event.buttons[0] == 1
 
     if(is_leftclick and self.player.piece):        
-      board.piece = move_piece(event, self.player.piece)
+      self.player.piece = move_piece(event, self.player.piece)
     else:
-      cursor = HAND_CURSOR if sq.piece else self.cursor
+      cursor = self.cursor
+      if sq.is_focused(event.pos):
+        cursor = HAND_CURSOR
       pg.mouse.set_cursor(*cursor)
 
   def run(self, board, players):
     self.player = players[0]
     self.draw(board)
-    clock = pg.time.Clock()
     quit = False
     while not quit:
-      clock.tick(60)
       for event in pg.event.get():
-        if event.type == pg.QUIT:
-          quit = True
-        elif pg.event.event_name(event.type) in self.events:
+        quit = event.type == pg.QUIT
+        if pg.event.event_name(event.type) in self.events:
           if(board.has(event.pos)):
             handle = getattr(self, pg.event.event_name(event.type))
             handle(event, board)
-
       self.draw(board)
       pg.display.flip()

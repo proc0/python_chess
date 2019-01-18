@@ -27,19 +27,21 @@ class Square:
     if(self.piece):
       _piece = self.piece
       self.piece = None
-    self.draw()
+    # self.surface.fill(self.color)
     return _piece
 
   def place_piece(self, piece):
     self.piece = piece
     self.piece.x = self.x
-    self.piece.y = self.y    
-    piece_rect = self.piece.piece_png.get_rect()
-    self.surface.fill(self.color)
-    self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
-    self.draw_coords()
+    self.piece.y = self.y  
+    return piece  
+    # piece_rect = self.piece.piece_png.get_rect()
+    # self.draw()
+    # self.surface.fill(self.color)
+    # self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
+    # self.draw_coords()
 
-  def has(self, pos):
+  def is_focused(self, pos):
     in_x = pos[0] > self.x + self.pad and pos[0] < self.x + self.size - self.pad
     in_y = pos[1] > self.y + self.pad and pos[1] < self.y + self.size - self.pad
     return self.piece and in_x and in_y

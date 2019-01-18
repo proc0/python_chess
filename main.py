@@ -6,11 +6,15 @@ from src.player import new_players
 
 SIZE = (800,640)
 PLAYERS = ['white', 'black']
+TITLE = "python chess"
+ICON = "icon.png"
 
 def main(): 
   # init
   pg.init()
   pg.font.init()
+  pg.display.set_icon(pg.image.load(ICON))
+  pg.display.set_caption(TITLE)
   # setup
   board = Board(SIZE[1])
   game = Game(SIZE)
