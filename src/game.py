@@ -1,18 +1,12 @@
 import os
 import time
 import pygame as pg
-from cursors import HAND_CURSOR, GRAB_CURSOR
 from pprint import pprint
-
-def move_piece(pos, piece):
-  piece_rect = piece.piece_png.get_rect()
-  piece.x = pos[0] - piece_rect[2]/2
-  piece.y = pos[1] - piece_rect[3]/2
-  return piece
+from src.action import update
 
 class Game():
   display = None
-  player = None
+  win_size = (0,0)
   pg_events = [
     'MouseButtonUp', 
     'MouseButtonDown', 
@@ -20,51 +14,19 @@ class Game():
   
   def __init__(self, win_size):
     self.display = pg.display.set_mode(win_size)
+    self.win_size = win_size
     self.cursor = pg.mouse.get_cursor()
-    self.action = ('IDLE', None)
+    self.idle = ('IDLE', None)
 
-  def update(self, board, action, event):
-    sq = None
-    if(action == 'GRAB'):
-      sq = board.get_sq(event.pos)
-      if(sq.is_focused(event.pos) and not self.player.piece):
-        self.player.piece = move_piece(event.pos, sq.remove_piece())
-        pg.mouse.set_cursor(*GRAB_CURSOR)
-        self.action = ('MOVING', event)
-      else:
-        self.action = ('IDLE', event)
-
-    if(action == 'MOVING'):
-      sq = board.get_sq(event.pos)
-      if(self.player.piece):
-        self.player.piece = move_piece(event.pos, self.player.piece)
-
-    if(action == 'DROPPING'):
-      sq = board.get_sq(event.pos)
-      sq.place_piece(self.player.piece)
-      board.drop_piece(self.player.piece)
-      self.player.piece = None
-      self.player.move(sq)
-      self.action = ('DROP', event)
-
-    if(action == 'HOVER'):
-      pg.mouse.set_cursor(*HAND_CURSOR)
-
-    if(action == 'DROP'):
-      pg.mouse.set_cursor(*HAND_CURSOR)
-
-    if(action == 'IDLE'):
-      pg.mouse.set_cursor(*self.cursor)
-    
-    return sq
-
-  def draw(self, board):
+  def draw(self, player, board, sq = None):
     if(len(board.squares) == 0):
       board.draw()
+      sq_blits = list(map(lambda row: list(map(lambda s: (s.surface, (s.x, s.y)), row)), board.squares))
+      for row_blits in sq_blits:
+        board.surface.blits(row_blits)
       self.display.blit(board.surface, board.surface.get_rect())
     else:
-      sq = self.update(board, *self.action)
-      piece = self.player.piece
+      piece = player.piece
       if(sq):
         sq.draw()
         board.surface.blit(sq.surface, (sq.x, sq.y))
@@ -72,36 +34,53 @@ class Game():
         if(piece):
           self.display.blit(piece.surface, (piece.x,  piece.y))
 
-  def MouseButtonUp(self, event, board):
-    if(self.player.piece):
-      self.action = ('DROPPING', event)
+  def MouseButtonUp(self, event, player, board):
+    action = self.idle
+    if(player.piece):
+      action = ('DROPPING', event)
+    return action
 
-  def MouseButtonDown(self, event, board):
+  def MouseButtonDown(self, event, player, board):
     is_leftclick = event.button == 1
+    action = self.idle
     if(is_leftclick):
-      self.action = ('GRAB', event)
+      action = ('GRAB', event)
+    return action
 
-  def MouseMotion(self, event, board):
+  def MouseMotion(self, event, player, board):
     is_leftclick = event.buttons[0] == 1
     sq = board.get_sq(event.pos)
-    if(is_leftclick and self.player.piece):        
-      self.action = ('MOVING', event)
+    action = self.idle
+    if(is_leftclick and player.piece):        
+      action = ('MOVING', event)
     elif(sq.is_focused(event.pos)):
-      self.action = ('HOVER', event)
+      action = ('HOVER', event)
     else:
-      self.action = ('IDLE', event)
+      action = ('IDLE', event)
+    return action
 
   def run(self, board, players):
-    self.player = players[0]
-    self.draw(board)
+    player = players[0]
+    self.draw(player, board)
+    font = pg.font.Font(None, 30)
+    ui = pg.Surface((self.win_size[0]-board.size[0], board.size[0]))
+    clock = pg.time.Clock()
     quit = False
     while not quit:
+      clock.tick(60)
       for event in pg.event.get():
         quit = event.type == pg.QUIT
         pg_event = pg.event.event_name(event.type)
+        sq = None
         if pg_event in self.pg_events:
           if(board.has(event.pos)):
-            handle = getattr(self, pg_event)
-            handle(event, board)
-            self.draw(board)
-      pg.display.flip()
+            input = getattr(self, pg_event)
+            action = input(event, player, board)
+            sq = update(player, board, *action)
+            self.draw(player, board, sq)
+            pg.display.flip()
+      # TODO: refactor to ui 
+      fps = font.render(str(int(clock.get_fps())), True, pg.Color('white'))
+      ui.fill((0,0,0))
+      ui.blit(fps, (20,20))
+      self.display.blit(ui, (board.size[0],0))

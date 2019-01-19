@@ -93,8 +93,6 @@ class Board:
           sq.draw()
           row.append(sq)
         self.squares.append(row)
-        row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
-        self.surface.blits(row_blits)
         
 
     
