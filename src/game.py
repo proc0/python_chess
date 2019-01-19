@@ -2,7 +2,9 @@ import os
 import time
 import pygame as pg
 from pprint import pprint
+
 from src.action import update
+from src.ui import UI
 
 class Game():
   display = None
@@ -53,8 +55,7 @@ class Game():
     return action
 
   def run(self, board, players):
-    font = pg.font.Font(None, 30)
-    ui = pg.Surface((self.win_size[0]-board.size[0], board.size[0]))
+
     clock = pg.time.Clock()
     player = players[0]
     self.draw(board)
@@ -73,7 +74,4 @@ class Game():
             self.draw(board, player.piece, square)
             pg.display.flip()
       # TODO: refactor to ui 
-      fps = font.render(str(int(clock.get_fps())), True, pg.Color('white'))
-      ui.fill((0,0,0))
-      ui.blit(fps, (20,20))
-      self.display.blit(ui, (board.size[0],0))
+      self.display.blit(UI.draw(clock.get_fps()), (board.size[0],0))

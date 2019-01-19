@@ -26,8 +26,6 @@ initial_board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
 class Board:
   squares = []
-  pieces = []
-  piece = None
 
   def __init__(self, size):
     self.size = (size, size)
@@ -40,6 +38,10 @@ class Board:
   def square(self, pos):
     point = lambda i: floor(pos[i]/self.sq_size)
     return self.squares[point(1)][point(0)]
+
+  def update(self, square):
+    square.draw()
+    self.surface.blit(square.surface, (square.x, square.y))
 
   def draw(self, square = None):
     sq_pad = 6
@@ -88,9 +90,5 @@ class Board:
         self.squares.append(row)
         row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
         self.surface.blits(row_blits)
-
-    if(square):
-      square.draw()
-      self.surface.blit(square.surface, (square.x, square.y))
 
     
