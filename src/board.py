@@ -95,21 +95,6 @@ class Board:
         self.squares.append(row)
         row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
         self.surface.blits(row_blits)
-
-    # if(self.piece or activity == 'DROP'):
-    #   # xy = [2,1,0,-1,-2]
-    #   # sq_coords = list(filter(lambda c: c != [0,0], product(xy, xy)))
-    #   # sqs = list(map(lambda coord: self.squares[coord[0]+floor(self.piece.y/self.sq_size)][coord[1]+floor(self.piece.x/self.sq_size)], sq_coords))
-    #   # sqs_blits = []
-    #   # for row in self.squares:
-    #   #   for sq in row:
-    #   #     sq.draw()
-    #   #     sqs_blits.append((sq.surface, (sq.x, sq.y)))
-    #   # self.surface.blits(sqs_blits)              
-    #   if(activity == 'DROP'):
-    #     self.piece = None
-    #   else:
-    #     self.surface.fill(self.buffer)
-    #     self.piece_surface.blit(self.piece.surface, (self.piece.x, self.piece.y))
+        
 
     
