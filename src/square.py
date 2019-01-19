@@ -35,7 +35,7 @@ class Square:
     self.piece.y = self.y  
     return piece
 
-  def is_focused(self, pos):
+  def within(self, pos):
     in_x = pos[0] > self.x + self.pad and pos[0] < self.x + self.size - self.pad
     in_y = pos[1] > self.y + self.pad and pos[1] < self.y + self.size - self.pad
     return self.piece and in_x and in_y

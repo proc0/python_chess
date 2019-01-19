@@ -34,26 +34,19 @@ class Board:
     self.sq_size = int(self.size[1]/8)
     self.surface = Surface(self.size)
 
-  def has(self, pos):
+  def within(self, pos):
     return pos[0] < self.size[0] and pos[1] < self.size[1]
 
-  def get_sq(self, pos):
+  def square(self, pos):
     point = lambda i: floor(pos[i]/self.sq_size)
-    sq = self.squares[point(1)][point(0)]
-    return sq
+    return self.squares[point(1)][point(0)]
 
-  def drop_piece(self, piece):
-    sq = self.get_sq((piece.x, piece.y))
-    print(sq.label)
-    sq.draw()
-    self.surface.blit(sq.surface, (sq.x, sq.y))
-
-  def draw(self):
+  def draw(self, square = None):
     sq_pad = 6
     sq_range = range(1, 9)
 
     if(len(self.squares) == 0):
-      print('board draw')
+      print('init board draw')
 
       for y in sq_range:
         row = []
@@ -93,6 +86,11 @@ class Board:
           sq.draw()
           row.append(sq)
         self.squares.append(row)
-        
+        row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
+        self.surface.blits(row_blits)
+
+    if(square):
+      square.draw()
+      self.surface.blit(square.surface, (square.x, square.y))
 
     

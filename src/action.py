@@ -7,25 +7,20 @@ def move_piece(pos, piece):
   piece.y = pos[1] - piece_rect[3]/2
   return piece
 
-def update(player, board, action, event):
-    sq = None
+def update(player, square, action, event):
     if(action == 'GRAB'):
-      sq = board.get_sq(event.pos)
-      if(sq.is_focused(event.pos) and not player.piece):
-        player.piece = move_piece(event.pos, sq.remove_piece())
+      if(square.within(event.pos) and not player.piece):
+        player.piece = move_piece(event.pos, square.remove_piece())
         pg.mouse.set_cursor(*GRAB_CURSOR)
 
     if(action == 'MOVING'):
-      sq = board.get_sq(event.pos)
       if(player.piece):
         player.piece = move_piece(event.pos, player.piece)
 
     if(action == 'DROPPING'):
-      sq = board.get_sq(event.pos)
-      sq.place_piece(player.piece)
-      board.drop_piece(player.piece)
+      square.place_piece(player.piece)
       player.piece = None
-      player.move(sq)
+      player.move(square)
       pg.mouse.set_cursor(*HAND_CURSOR)
 
     if(action == 'HOVER'):
@@ -34,4 +29,4 @@ def update(player, board, action, event):
     if(action == 'IDLE'):
       pg.mouse.set_cursor(*DEFAULT_CURSOR)
     
-    return sq
+    # return sq
