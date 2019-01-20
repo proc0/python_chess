@@ -4,7 +4,6 @@ import pygame as pg
 from pprint import pprint
 
 from src.action import update
-from src.ui import UI
 
 class Game():
   display = None
@@ -20,13 +19,11 @@ class Game():
     self.cursor = pg.mouse.get_cursor()
     self.idle = ('IDLE', None)
 
-  def draw(self, board, piece = None, sq = None):
+  def draw(self, board, square = None, piece = None):
     if(len(board.squares) == 0):
-      board.draw()
-      self.display.blit(board.surface, board.surface.get_rect())
-    elif(sq):
-      board.draw(sq)
-      self.display.blit(board.surface, board.surface.get_rect())
+      self.display.blit(board.draw(), board.surface.get_rect())
+    else:
+      self.display.blit(board.update(square), board.surface.get_rect())
       if(piece):
         self.display.blit(piece.surface, (piece.x,  piece.y))
 
@@ -54,12 +51,10 @@ class Game():
       action = ('IDLE', event)
     return action
 
-  def run(self, board, players):
-
-    clock = pg.time.Clock()
-    player = players[0]
-    self.draw(board)
+  def run(self, ui, board, players):
     quit = False
+    player = players[0]
+    clock = pg.time.Clock()
     while not quit:
       clock.tick(60)
       for event in pg.event.get():
@@ -70,8 +65,10 @@ class Game():
             input = getattr(self, pg_event)
             action = input(event, player, board)
             square = board.square(event.pos)
+            # update player
             update(player, square, *action)
-            self.draw(board, player.piece, square)
+            # update board
+            self.draw(board, square, player.piece)
             pg.display.flip()
-      # TODO: refactor to ui 
-      self.display.blit(UI.draw(clock.get_fps()), (board.size[0],0))
+      # update ui
+      self.display.blit(ui.draw(int(clock.get_fps())), (board.size[0],0))

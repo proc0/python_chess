@@ -29,4 +29,3 @@ def update(player, square, action, event):
     if(action == 'IDLE'):
       pg.mouse.set_cursor(*DEFAULT_CURSOR)
     
-    # return sq

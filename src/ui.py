@@ -1,10 +1,12 @@
+import pygame as pg
 
 class UI():
-    def __init__(self):
+    def __init__(self, ui_size):
         self.font = pg.font.Font(None, 30)
-        self.ui = pg.Surface((self.win_size[0]-board.size[0], board.size[0]))
+        self.ui = pg.Surface(ui_size)
 
-    def draw(self, fps):
-      fps = font.render(str(int(fps)), True, pg.Color('white'))
-      self.ui.fill((0,0,0))
-      self.ui.blit(fps, (20,20))
+    def draw(self, clock_fps = 0):
+        fps = self.font.render(str(clock_fps), True, pg.Color('white'))
+        self.ui.fill((0,0,0))
+        self.ui.blit(fps, (20,20))
+        return self.ui

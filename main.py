@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import pygame as pg
+from src.ui import UI
 from src.game import Game
 from src.board import Board
 from src.player import new_players
@@ -16,12 +17,14 @@ def main():
   pg.display.set_icon(pg.image.load(ICON))
   pg.display.set_caption(TITLE)
   # setup
-  board = Board(SIZE[1])
+  ui = UI((SIZE[0]-SIZE[1], SIZE[1]))
   game = Game(SIZE)
+  board = Board(SIZE[1])
   # ready
   players = new_players(PLAYERS)
   # begin
-  game.run(board, players)
+  game.draw(board)
+  game.run(ui, board, players)
   # gg
   pg.quit()
   return quit()

@@ -16,6 +16,7 @@ class Square:
       piece_rect = self.piece.piece_png.get_rect()
       self.piece.draw()
       self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
+    return self.surface
 
   def draw_coords(self):
     font = pg.font.SysFont('Arial', 10)

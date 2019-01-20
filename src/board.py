@@ -42,14 +42,13 @@ class Board:
   def update(self, square):
     square.draw()
     self.surface.blit(square.surface, (square.x, square.y))
+    return self.surface
 
   def draw(self, square = None):
     sq_pad = 6
     sq_range = range(1, 9)
 
     if(len(self.squares) == 0):
-      print('init board draw')
-
       for y in sq_range:
         row = []
         _y = y-1
@@ -90,5 +89,6 @@ class Board:
         self.squares.append(row)
         row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
         self.surface.blits(row_blits)
+    return self.surface
 
     
