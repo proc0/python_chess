@@ -19,11 +19,14 @@ class Game():
     self.cursor = pg.mouse.get_cursor()
     self.idle = ('IDLE', None)
 
-  def draw(self, board, square = None, piece = None):
+  def draw(self, board, squares = None, piece = None):
     if(len(board.squares) == 0):
       self.display.blit(board.draw(), board.surface.get_rect())
     else:
-      self.display.blit(board.update(square), board.surface.get_rect())
+      # square.hover = False
+      self.display.blit(board.update(squares[0]), board.surface.get_rect())
+      if(squares[1]):
+        self.display.blit(board.update(squares[1]), board.surface.get_rect())
       if(piece):
         self.display.blit(piece.surface, (piece.x,  piece.y))
 
@@ -52,9 +55,12 @@ class Game():
     return action
 
   def run(self, ui, board, players):
-    quit = False
     player = players[0]
     clock = pg.time.Clock()
+    
+    quit = False
+    past_sq = None
+    curr_sq = None
     while not quit:
       clock.tick(60)
       for event in pg.event.get():
@@ -65,10 +71,12 @@ class Game():
             input = getattr(self, pg_event)
             action = input(event, player, board)
             square = board.square(event.pos)
+            past_sq = curr_sq if curr_sq != square else past_sq
+            curr_sq = square
             # update player
-            update(player, square, *action)
+            update(player, (square, past_sq), *action)
             # update board
-            self.draw(board, square, player.piece)
+            self.draw(board, (square, past_sq), player.piece)
             pg.display.flip()
       # update ui
       self.display.blit(ui.draw(int(clock.get_fps())), (board.size[0],0))
