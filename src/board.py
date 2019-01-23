@@ -41,7 +41,10 @@ class Board:
 
   def update(self):
     for row in self.squares:
-      row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
+      row_blits = []
+      for sq in row:
+        sq.draw()
+        row_blits.append((sq.surface, (sq.x, sq.y)))
       self.surface.blits(row_blits)
     return self.surface
 

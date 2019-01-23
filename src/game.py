@@ -17,64 +17,66 @@ class Game():
     self.display = pg.display.set_mode(win_size)
     self.win_size = win_size
     self.cursor = pg.mouse.get_cursor()
-    self.idle = ('IDLE', None)
+    self.idle = 'IDLE'
+    self.initted = False
 
-  def draw(self, player, board):
+  def draw(self, board, player):
     if(len(board.squares) == 0):
       self.display.blit(board.draw(), board.surface.get_rect())
     else:
-      # square.hover = False
       self.display.blit(board.update(), board.surface.get_rect())
       if(player.piece):
         self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
 
-  def MouseButtonUp(self, event, player, board):
+  def MouseButtonUp(self, board, event, player):
     action = self.idle
     if(player.piece):
-      action = ('DROPPING', event)
+      action = 'DROPPING'
     return action
 
-  def MouseButtonDown(self, event, player, board):
+  def MouseButtonDown(self, board, event, player):
     is_leftclick = event.button == 1
     action = self.idle
     if(is_leftclick):
-      action = ('GRAB', event)
+      action = 'GRAB'
     return action
 
-  def MouseMotion(self, event, player, board):
+  def MouseMotion(self, board, event, player):
     is_leftclick = event.buttons[0] == 1
     action = self.idle
     if(is_leftclick and player.piece):        
-      action = ('MOVING', event)
+      action = 'MOVING'
     elif(board.square(event.pos).within(event.pos)):
-      action = ('HOVER', event)
-    else:
-      action = ('IDLE', event)
+      action = 'HOVER' 
     return action
 
   def run(self, ui, board, players):
     player = players[0]
     clock = pg.time.Clock()
-    self.draw(player, board)
+    ui_pos = (board.size[0],0)
     quit = False
-    past_sq = None
-    curr_sq = None
     while not quit:
       clock.tick(60)
       for event in pg.event.get():
         quit = event.type == pg.QUIT
         pg_event = pg.event.event_name(event.type)
         if pg_event in self.pg_events:
-          if(board.within(event.pos)):
+          if(not self.initted):
+            action = 'INIT'
+            self.draw(board, player)
+            self.initted = True
+          elif(board.within(event.pos)):
             input = getattr(self, pg_event)
-            action = input(event, player, board)
-            square = board.square(event.pos)
-            past_sq = curr_sq if curr_sq != square else past_sq
-            curr_sq = square
-            # update player
-            update(player, (curr_sq, past_sq), *action)
+            action = input(board, event, player)
+
+          if(action != 'IDLE'):
+            # update game
+            board, player = update(board, action, event, player)
             # update board
-            self.draw(player, board)
+            self.draw(board, player)
+            # update pg
             pg.display.flip()
+      # debug
+      fps = int(clock.get_fps())
       # update ui
-      self.display.blit(ui.draw(int(clock.get_fps())), (board.size[0],0))
+      self.display.blit(ui.draw(fps), ui_pos)
