@@ -17,6 +17,7 @@ def update(board, action, event, player):
       pg.mouse.set_cursor(*GRAB_CURSOR)
 
   elif(action == 'MOVING'):
+    square.hover = True
     if(player.piece):
       player.piece = move_piece(event.pos, player.piece)
 
