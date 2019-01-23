@@ -54,8 +54,8 @@ class Game():
     clock = pg.time.Clock()
     ui_pos = (board.size[0],0)
 
-    self.draw(board, player)
     quit = False
+    self.draw(board, player)
     while not quit:
       clock.tick(60)
       for event in pg.event.get():
@@ -65,7 +65,6 @@ class Game():
           if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
-
           if(action != 'IDLE'):
             # update game
             board, player = update(board, action, event, player)
@@ -73,7 +72,6 @@ class Game():
             self.draw(board, player)
             # update pg
             pg.display.flip()
-
       # debug
       fps = int(clock.get_fps())
       # update ui

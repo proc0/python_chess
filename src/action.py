@@ -9,8 +9,7 @@ def move_piece(pos, piece):
 
 def update(board, action, event, player):
   square = board.square(event.pos)
-  # past_sq = squares[1]
-  # print(square.label, past_sq.label if past_sq else '')
+  
   if(action == 'GRAB'):
     if(square.within(event.pos) and not player.piece):
       player.piece = move_piece(event.pos, square.remove_piece())
