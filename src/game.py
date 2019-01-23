@@ -19,16 +19,14 @@ class Game():
     self.cursor = pg.mouse.get_cursor()
     self.idle = ('IDLE', None)
 
-  def draw(self, board, squares = None, piece = None):
+  def draw(self, player, board):
     if(len(board.squares) == 0):
       self.display.blit(board.draw(), board.surface.get_rect())
     else:
       # square.hover = False
-      self.display.blit(board.update(squares[0]), board.surface.get_rect())
-      if(squares[1]):
-        self.display.blit(board.update(squares[1]), board.surface.get_rect())
-      if(piece):
-        self.display.blit(piece.surface, (piece.x,  piece.y))
+      self.display.blit(board.update(), board.surface.get_rect())
+      if(player.piece):
+        self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
 
   def MouseButtonUp(self, event, player, board):
     action = self.idle
@@ -57,7 +55,7 @@ class Game():
   def run(self, ui, board, players):
     player = players[0]
     clock = pg.time.Clock()
-    
+    self.draw(player, board)
     quit = False
     past_sq = None
     curr_sq = None
@@ -74,9 +72,9 @@ class Game():
             past_sq = curr_sq if curr_sq != square else past_sq
             curr_sq = square
             # update player
-            update(player, (square, past_sq), *action)
+            update(player, (curr_sq, past_sq), *action)
             # update board
-            self.draw(board, (square, past_sq), player.piece)
+            self.draw(player, board)
             pg.display.flip()
       # update ui
       self.display.blit(ui.draw(int(clock.get_fps())), (board.size[0],0))

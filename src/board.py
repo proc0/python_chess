@@ -39,9 +39,10 @@ class Board:
     point = lambda i: floor(pos[i]/self.sq_size)
     return self.squares[point(1)][point(0)]
 
-  def update(self, square):
-    square.draw()
-    self.surface.blit(square.surface, (square.x, square.y))
+  def update(self):
+    for row in self.squares:
+      row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
+      self.surface.blits(row_blits)
     return self.surface
 
   def draw(self, square = None):

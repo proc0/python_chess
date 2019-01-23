@@ -23,7 +23,6 @@ def main():
   # ready
   players = new_players(PLAYERS)
   # begin
-  game.draw(board)
   game.run(ui, board, players)
   # gg
   pg.quit()
