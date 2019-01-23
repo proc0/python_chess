@@ -28,13 +28,13 @@ def update(board, action, event, player):
     pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == 'HOVER'):
+    for row in board.squares:
+      for sq in row:
+        sq.hover = False
     square.hover = True
     pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == 'IDLE'):
-    for row in board.squares:
-      for sq in row:
-        sq.hover = False
     pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
   return board, player
