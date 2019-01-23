@@ -14,10 +14,10 @@ def update(board, action, event, player):
   if(action == 'GRAB'):
     if(square.within(event.pos) and not player.piece):
       player.piece = move_piece(event.pos, square.remove_piece())
+      square.hover = False
       pg.mouse.set_cursor(*GRAB_CURSOR)
 
   elif(action == 'MOVING'):
-    square.hover = True
     if(player.piece):
       player.piece = move_piece(event.pos, player.piece)
 
@@ -32,6 +32,9 @@ def update(board, action, event, player):
     pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == 'IDLE'):
+    for row in board.squares:
+      for sq in row:
+        sq.hover = False
     pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
   return board, player

@@ -18,7 +18,6 @@ class Game():
     self.win_size = win_size
     self.cursor = pg.mouse.get_cursor()
     self.idle = 'IDLE'
-    self.initted = False
 
   def draw(self, board, player):
     if(len(board.squares) == 0):
@@ -47,13 +46,15 @@ class Game():
     if(is_leftclick and player.piece):        
       action = 'MOVING'
     elif(board.square(event.pos).within(event.pos)):
-      action = 'HOVER' 
+      action = 'HOVER'
     return action
 
   def run(self, ui, board, players):
     player = players[0]
     clock = pg.time.Clock()
     ui_pos = (board.size[0],0)
+
+    self.draw(board, player)
     quit = False
     while not quit:
       clock.tick(60)
@@ -61,11 +62,7 @@ class Game():
         quit = event.type == pg.QUIT
         pg_event = pg.event.event_name(event.type)
         if pg_event in self.pg_events:
-          if(not self.initted):
-            action = 'INIT'
-            self.draw(board, player)
-            self.initted = True
-          elif(board.within(event.pos)):
+          if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
 
@@ -76,6 +73,7 @@ class Game():
             self.draw(board, player)
             # update pg
             pg.display.flip()
+
       # debug
       fps = int(clock.get_fps())
       # update ui
