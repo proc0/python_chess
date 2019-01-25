@@ -30,7 +30,7 @@ class Game():
   def MouseButtonUp(self, board, event, player):
     action = self.idle
     if(player.piece):
-      action = 'DROPPING'
+      action = 'DROP'
     return action
 
   def MouseButtonDown(self, board, event, player):
@@ -44,9 +44,11 @@ class Game():
     is_leftclick = event.buttons[0] == 1
     action = self.idle
     if(is_leftclick and player.piece):        
-      action = 'MOVING'
+      action = 'DRAG'
     elif(board.square(event.pos).within(event.pos)):
       action = 'HOVER'
+    else:
+      action = 'CLEAR'
     return action
 
   def run(self, ui, board, players):
@@ -55,6 +57,7 @@ class Game():
     ui_pos = (board.size[0],0)
 
     quit = False
+    cleared = False
     self.draw(board, player)
     while not quit:
       clock.tick(60)
@@ -65,13 +68,17 @@ class Game():
           if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
-          if(action != 'IDLE'):
+          if(action != 'IDLE' or (action == 'CLEAR' and not cleared)):
+            print(action)
             # update game
             board, player = update(board, action, event, player)
             # update board
             self.draw(board, player)
             # update pg
             pg.display.flip()
+
+            cleared = action == 'CLEAR'
+
       # debug
       fps = int(clock.get_fps())
       # update ui

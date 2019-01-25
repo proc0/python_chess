@@ -43,13 +43,14 @@ class Board:
     for row in self.squares:
       row_blits = []
       for sq in row:
-        sq.draw()
+        if(not sq.fresh):
+          sq.draw()
         row_blits.append((sq.surface, (sq.x, sq.y)))
       self.surface.blits(row_blits)
     return self.surface
 
   def draw(self, square = None):
-    sq_pad = 6
+    sq_pad = 8
     sq_range = range(1, 9)
 
     if(len(self.squares) == 0):

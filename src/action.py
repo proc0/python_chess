@@ -16,24 +16,26 @@ def update(board, action, event, player):
       square.hover = False
       pg.mouse.set_cursor(*GRAB_CURSOR)
 
-  elif(action == 'MOVING'):
+  elif(action == 'DRAG'):
     if(player.piece):
       player.piece = move_piece(event.pos, player.piece)
 
-  elif(action == 'DROPPING'):
+  elif(action == 'DROP'):
     square.place_piece(player.piece)
     player.piece = None
     player.move(square)
     pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == 'HOVER'):
+    square.hover = True
+    square.fresh = False
+    pg.mouse.set_cursor(*HAND_CURSOR)
+
+  elif(action == 'CLEAR'):
     for row in board.squares:
       for sq in row:
         sq.hover = False
-    square.hover = True
-    pg.mouse.set_cursor(*HAND_CURSOR)
-
-  elif(action == 'IDLE'):
+        sq.fresh = False
     pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
   return board, player

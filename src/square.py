@@ -10,7 +10,7 @@ class Square:
     for k, v in props.items():
       setattr(self, k, v)
     self.surface = Surface((self.size, self.size))
-
+    self.fresh = False
     self.sq_highlight1 = Surface((self.size, 4))
     self.sq_highlight2 = Surface((4, self.size))
     self.sq_highlight1.fill((255,255,153))
@@ -28,7 +28,7 @@ class Square:
       piece_rect = self.piece.piece_png.get_rect()
       self.piece.draw()
       self.surface.blit(self.piece.surface, (self.size/2 - piece_rect[3]/2, self.size/2 - piece_rect[2]/2))
-
+    self.fresh = True
     return self.surface
 
   def draw_coords(self):
@@ -41,6 +41,7 @@ class Square:
     if(self.piece):
       _piece = self.piece
       self.piece = None
+    self.fresh = False
     return _piece
 
   def highlight(self):
@@ -48,11 +49,13 @@ class Square:
     self.surface.blit(self.sq_highlight2, (0,0))
     self.surface.blit(self.sq_highlight1, (0,self.size-4))
     self.surface.blit(self.sq_highlight2, (self.size-4,0))
+    self.fresh = False
 
   def place_piece(self, piece):
     self.piece = piece
     self.piece.x = self.x
     self.piece.y = self.y  
+    self.fresh = False
     return piece
 
   def within(self, pos):
