@@ -3,7 +3,7 @@ import time
 import pygame as pg
 from pprint import pprint
 
-from src.action import update
+from src.action import update, actions
 
 class Game():
   display = None
@@ -17,7 +17,6 @@ class Game():
     self.display = pg.display.set_mode(win_size)
     self.win_size = win_size
     self.cursor = pg.mouse.get_cursor()
-    self.idle = 'IDLE'
 
   def draw(self, board, player):
     if(len(board.squares) == 0):
@@ -28,27 +27,27 @@ class Game():
         self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
 
   def MouseButtonUp(self, board, event, player):
-    action = self.idle
+    action = actions.IDLE
     if(player.piece):
-      action = 'DROP'
+      action = actions.DROP
     return action
 
   def MouseButtonDown(self, board, event, player):
     is_leftclick = event.button == 1
-    action = self.idle
+    action = actions.IDLE
     if(is_leftclick):
-      action = 'GRAB'
+      action = actions.GRAB
     return action
 
   def MouseMotion(self, board, event, player):
     is_leftclick = event.buttons[0] == 1
-    action = self.idle
+    action = actions.IDLE
     if(is_leftclick and player.piece):        
-      action = 'DRAG'
+      action = actions.DRAG
     elif(board.square(event.pos).within(event.pos)):
-      action = 'HOVER'
+      action = actions.HOVER
     else:
-      action = 'CLEAR'
+      action = actions.CLEAR
     return action
 
   def run(self, ui, board, players):
@@ -68,17 +67,16 @@ class Game():
           if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
-          if(action != 'IDLE' or (action == 'CLEAR' and not cleared)):
-            print(action)
-            # update game
-            board, player = update(board, action, event, player)
-            # update board
-            self.draw(board, player)
-            # update pg
-            pg.display.flip()
-
-            cleared = action == 'CLEAR'
-
+            should_clear = action == actions.CLEAR and not cleared
+            if(action != actions.IDLE or should_clear):
+              # update game
+              board, player = update(board, action, event, player)
+              # draw game
+              self.draw(board, player)
+              # flip display
+              pg.display.flip()
+              # TODO: refactor event optim
+              cleared = action == actions.CLEAR
       # debug
       fps = int(clock.get_fps())
       # update ui
