@@ -52,7 +52,8 @@ class Board:
   def draw(self, square = None):
     sq_pad = 8
     sq_range = range(1, 9)
-
+    font_size = 10
+    
     if(len(self.squares) == 0):
       for y in sq_range:
         row = []
@@ -84,6 +85,7 @@ class Board:
             'x': tx, 
             'y': ty,
             'pad': sq_pad, 
+            'font_size': font_size, 
             'piece': occupy,
             'color': DARK if toggle_color else LIGHT,
             'text_color': LIGHT if toggle_color else DARK,

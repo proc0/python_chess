@@ -27,27 +27,28 @@ class Game():
         self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
 
   def MouseButtonUp(self, board, event, player):
-    action = actions.IDLE
     if(player.piece):
       action = actions.DROP
+    else:
+      action = actions.IDLE
     return action
 
   def MouseButtonDown(self, board, event, player):
     is_leftclick = event.button == 1
-    action = actions.IDLE
     if(is_leftclick):
       action = actions.GRAB
+    else:
+      action = actions.IDLE
     return action
 
   def MouseMotion(self, board, event, player):
     is_leftclick = event.buttons[0] == 1
-    action = actions.IDLE
     if(is_leftclick and player.piece):        
       action = actions.DRAG
     elif(board.square(event.pos).within(event.pos)):
       action = actions.HOVER
     else:
-      action = actions.CLEAR
+      action = actions.IDLE
     return action
 
   def run(self, ui, board, players):
@@ -56,7 +57,7 @@ class Game():
     ui_pos = (board.size[0],0)
 
     quit = False
-    cleared = False
+    init = True
     self.draw(board, player)
     while not quit:
       clock.tick(60)
@@ -67,8 +68,9 @@ class Game():
           if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
-            should_clear = action == actions.CLEAR and not cleared
-            if(action != actions.IDLE or should_clear):
+            # should_clear = action == actions.CLEAR and not cleared
+            if(action != actions.IDLE):
+              # print(action)
               # update game
               board, player = update(board, action, event, player)
               # draw game
@@ -76,7 +78,7 @@ class Game():
               # flip display
               pg.display.flip()
               # TODO: refactor event optim
-              cleared = action == actions.CLEAR
+              # cleared = action == actions.CLEAR
       # debug
       fps = int(clock.get_fps())
       # update ui
