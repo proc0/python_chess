@@ -1,6 +1,5 @@
 from src.piece import Piece
 import re
-# rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
 
 def fromFEN(fen):
     # assuming good FEN
