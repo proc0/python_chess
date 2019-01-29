@@ -2,7 +2,6 @@ from src.piece import Piece
 import re
 
 def fromFEN(fen):
-    # assuming good FEN
     # TODO: check FEN form (regex?)
     parts = fen.split(' ')
     ranks = parts[0].split('/')
