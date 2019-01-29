@@ -51,51 +51,52 @@ class Board:
 
   def draw(self, square = None):
     sq_pad = 8
-    sq_range = range(1, 9)
     font_size = 10
-    
+
+    fen_model = fromFEN(initial_board)
+
     if(len(self.squares) == 0):
-      for y in sq_range:
+      for r in range(0, len(fen_model)):
+        rank = fen_model[r]
         row = []
-        _y = y-1
-        for x in sq_range:
-          _x = x-1
-          tx = self.sq_size*_x
-          ty = self.sq_size*_y
+        for s in range(0, len(rank)):
+          sq = rank[s]
+          tx = self.sq_size*sq['_x']
+          ty = self.sq_size*sq['_y']
+          toggle_color = is_even(sq['_x']+1) ^ is_even(sq['_y']+1)
 
-          toggle_color = is_even(x) ^ is_even(y)
-          pc_props = {
-            '_x' : _x,
-            '_y' : _y,
-            'x': tx, 
-            'y': ty,
-            'size': self.sq_size - (sq_pad*2),
-            'role': 'k',
-            'color': 'w',
-          }
-          
-          occupy = None
-          if(INITBOARD[_y][_x] == 1):
-            occupy = Piece(pc_props)
-
-          sq = Square({
+          sq_piece = None
+          if(sq['piece']):
+            sq_piece = Piece({
+              '_x' : sq['_x'],
+              '_y' : sq['_y'],
+              'x': tx, 
+              'y': ty,
+              'size': self.sq_size - (sq_pad*2),
+              'role': sq['piece']['role'],
+              'color': sq['piece']['color'],
+            })
+          square = Square({
             'size': self.sq_size,
-            '_x' : _x,
-            '_y' : _y,
-            'x': tx, 
-            'y': ty,
+            '_x' : sq['_x'],
+            '_y' : sq['_y'],
+            'x' : tx, 
+            'y' : ty,
             'pad': sq_pad, 
             'font_size': font_size, 
-            'piece': occupy,
+            'piece': sq_piece,
             'color': DARK if toggle_color else LIGHT,
             'text_color': LIGHT if toggle_color else DARK,
-            'label': str(chr(73-y)) + str(x)
+            'label': str(chr(73-(sq['_y']+1))) + str(sq['_x']+1),
+            'file': str(sq['_x']+1) if sq['_y'] == 7 else None,
+            'rank': str(chr(73-(sq['_y']+1))) if sq['_x'] == 0 else None
           })
-          sq.draw()
-          row.append(sq)
+          square.draw()
+          row.append(square)
         self.squares.append(row)
         row_blits = list(map(lambda s: (s.surface, (s.x, s.y)), row))
         self.surface.blits(row_blits)
+
     return self.surface
 
     
