@@ -19,8 +19,17 @@ def move_piece(pos, piece):
 
 def update(board, action, event, player):
   square = board.square(event.pos)
-  
-  if(action == actions.GRAB):
+
+  if(action == actions.HOVER):
+    for row in board.squares:
+      for sq in row:
+        sq.hover = False
+        sq.fresh = False
+    square.hover = True
+    square.fresh = False
+    pg.mouse.set_cursor(*HAND_CURSOR)
+
+  elif(action == actions.GRAB):
     if(square.within(event.pos) and not player.piece):
       player.piece = move_piece(event.pos, square.remove_piece())
       square.hover = False
@@ -34,15 +43,6 @@ def update(board, action, event, player):
     square.place_piece(player.piece)
     player.piece = None
     player.move(square)
-    pg.mouse.set_cursor(*HAND_CURSOR)
-
-  elif(action == actions.HOVER):
-    for row in board.squares:
-      for sq in row:
-        sq.hover = False
-        sq.fresh = False
-    square.hover = True
-    square.fresh = False
     pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == actions.CLEAR):
