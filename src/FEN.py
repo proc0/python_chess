@@ -24,12 +24,12 @@ def fromFEN(fen):
     return board
 
 def get_square_props(_x, _y, role=None):
-    square_props = { '_x': _x, '_y': _y }
-    if(role):
-        if(role.isupper()):
-            square_props['piece'] = { 'color': 'w', 'role': role.lower() }
-        else:
-            square_props['piece'] = { 'color': 'b', 'role': role }
-    else:
-        square_props['piece'] = None
+    square_props = { 
+        '_x': _x, 
+        '_y': _y }
+
+    square_props['piece'] = { 
+        'color': 'w' if role.isupper() else 'b', 
+        'role': role.lower() } if role else None
+
     return square_props

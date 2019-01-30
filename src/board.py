@@ -11,18 +11,8 @@ from src.FEN import fromFEN
 
 LIGHT = (255,255,255)
 DARK = (50,50,50)
-INITBOARD = [
-    [0,0,1,0,0,1,0,1],
-    [0,0,1,0,0,1,0,0],
-    [0,1,0,0,0,1,0,0],
-    [0,0,0,0,1,1,0,0],
-    [0,0,1,0,0,0,0,0],
-    [0,1,1,0,0,1,0,0],
-    [1,0,1,0,0,1,0,0],
-    [0,1,0,0,0,1,0,0]
-  ]
 
-initial_board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+START_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
 class Board:
   squares = []
@@ -53,7 +43,7 @@ class Board:
     sq_pad = 8
     font_size = 10
 
-    fen_model = fromFEN(initial_board)
+    fen_model = fromFEN(START_BOARD)
 
     if(len(self.squares) == 0):
       for r in range(0, len(fen_model)):
@@ -61,15 +51,17 @@ class Board:
         row = []
         for s in range(0, len(rank)):
           sq = rank[s]
-          tx = self.sq_size*sq['_x']
-          ty = self.sq_size*sq['_y']
-          toggle_color = is_even(sq['_x']+1) ^ is_even(sq['_y']+1)
+          _x = sq['_x']
+          _y = sq['_y']
+          tx = self.sq_size*_x
+          ty = self.sq_size*_y
+          toggle_color = is_even(_x+1) ^ is_even(_y+1)
 
           sq_piece = None
           if(sq['piece']):
             sq_piece = Piece({
-              '_x' : sq['_x'],
-              '_y' : sq['_y'],
+              '_x' : _x,
+              '_y' : _y,
               'x': tx, 
               'y': ty,
               'size': self.sq_size - (sq_pad*2),
@@ -78,8 +70,8 @@ class Board:
             })
           square = Square({
             'size': self.sq_size,
-            '_x' : sq['_x'],
-            '_y' : sq['_y'],
+            '_x' : _x,
+            '_y' : _y,
             'x' : tx, 
             'y' : ty,
             'pad': sq_pad, 
@@ -87,9 +79,9 @@ class Board:
             'piece': sq_piece,
             'color': DARK if toggle_color else LIGHT,
             'text_color': LIGHT if toggle_color else DARK,
-            'label': str(chr(73-(sq['_y']+1))) + str(sq['_x']+1),
-            'file': str(sq['_x']+1) if sq['_y'] == 7 else None,
-            'rank': str(chr(73-(sq['_y']+1))) if sq['_x'] == 0 else None
+            'label': str(chr(73-(_y+1))) + str(_x+1),
+            'file': str(_x+1) if _y == 7 else None,
+            'rank': str(chr(73-(_y+1))) if _x == 0 else None
           })
           square.draw()
           row.append(square)
