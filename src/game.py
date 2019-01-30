@@ -35,7 +35,7 @@ class Game():
 
   def MouseButtonDown(self, board, event, player):
     is_leftclick = event.button == 1
-    if(is_leftclick):
+    if(is_leftclick and board.square(event.pos).within(event.pos) and not player.piece):
       action = actions.GRAB
     else:
       action = actions.IDLE
@@ -48,7 +48,7 @@ class Game():
     elif(board.square(event.pos).within(event.pos)):
       action = actions.HOVER
     else:
-      action = actions.IDLE
+      action = actions.CLEAR
     return action
 
   def run(self, ui, board, players):

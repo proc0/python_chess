@@ -11,7 +11,7 @@ class Actions():
 
 actions = Actions()
 
-def move_piece(pos, piece):
+def drag_piece(pos, piece):
   piece_rect = piece.piece_png.get_rect()
   piece.x = pos[0] - piece_rect[2]/2
   piece.y = pos[1] - piece_rect[3]/2
@@ -20,6 +20,8 @@ def move_piece(pos, piece):
 def update(board, action, event, player):
   square = board.square(event.pos)
 
+  update_cursor(action)
+
   if(action == actions.HOVER):
     for row in board.squares:
       for sq in row:
@@ -27,30 +29,38 @@ def update(board, action, event, player):
         sq.fresh = False
     square.hover = True
     square.fresh = False
-    pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == actions.GRAB):
-    if(square.within(event.pos) and not player.piece):
-      player.piece = move_piece(event.pos, square.remove_piece())
-      square.hover = False
-      pg.mouse.set_cursor(*GRAB_CURSOR)
+    player.piece = drag_piece(event.pos, square.remove_piece())
+    square.hover = False
 
   elif(action == actions.DRAG):
-    if(player.piece):
-      player.piece = move_piece(event.pos, player.piece)
+    player.piece = drag_piece(event.pos, player.piece)
 
   elif(action == actions.DROP):
     square.place_piece(player.piece)
     player.piece = None
     player.move(square)
-    pg.mouse.set_cursor(*HAND_CURSOR)
 
   elif(action == actions.CLEAR):
     for row in board.squares:
       for sq in row:
+        # needs clear if hover
+        sq.fresh = not sq.hover
         sq.hover = False
-        sq.fresh = False
-    pg.mouse.set_cursor(*DEFAULT_CURSOR)
 
   return board, player
+
+def update_cursor(action):
+  if(action == actions.HOVER):
+    pg.mouse.set_cursor(*HAND_CURSOR)
+
+  elif(action == actions.GRAB or action == actions.DRAG):
+    pg.mouse.set_cursor(*GRAB_CURSOR)
+
+  elif(action == actions.DROP):
+    pg.mouse.set_cursor(*HAND_CURSOR)
+
+  else:
+    pg.mouse.set_cursor(*DEFAULT_CURSOR)
     
