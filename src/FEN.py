@@ -17,13 +17,19 @@ def fromFEN(fen):
                 num_spaces = int(sq)
                 for i in range(0, num_spaces):
                     _x = i
-                    row.append({ '_x': _x, '_y': _y, 'piece': None })
-            elif(sq.isupper()):
-                row.append({ '_x': _x, '_y': _y, 'piece': { 'color': 'w', 'role': sq.lower() } })
+                    row.append(get_square_props(_x, _y))
             else:
-                row.append({ '_x': _x, '_y': _y, 'piece': { 'color': 'b', 'role': sq } })
+                row.append(get_square_props(_x, _y, sq))
         board.append(row)
     return board
 
-def toPieces(fen):
-    ranks = fen.split('/')
+def get_square_props(_x, _y, role=None):
+    square_props = { '_x': _x, '_y': _y }
+    if(role):
+        if(role.isupper()):
+            square_props['piece'] = { 'color': 'w', 'role': role.lower() }
+        else:
+            square_props['piece'] = { 'color': 'b', 'role': role }
+    else:
+        square_props['piece'] = None
+    return square_props
