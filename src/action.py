@@ -2,11 +2,11 @@ import pygame as pg
 from cursors import HAND_CURSOR, GRAB_CURSOR, DEFAULT_CURSOR
 
 class Actions():
-  IDLE = 0
+  IDLE  = 0
   HOVER = 1
-  GRAB = 2
-  DRAG = 3
-  DROP = 4
+  GRAB  = 2
+  DRAG  = 3
+  DROP  = 4
   CLEAR = 5
 
 actions = Actions()
@@ -53,14 +53,14 @@ def update(board, action, event, player):
 
 def update_cursor(action):
   if(action == actions.HOVER):
-    pg.mouse.set_cursor(*HAND_CURSOR)
-
-  elif(action == actions.GRAB or action == actions.DRAG):
-    pg.mouse.set_cursor(*GRAB_CURSOR)
-
+    cursor = HAND_CURSOR
+  elif(action == actions.GRAB \
+    or action == actions.DRAG):
+    cursor = GRAB_CURSOR
   elif(action == actions.DROP):
-    pg.mouse.set_cursor(*HAND_CURSOR)
-
+    cursor = HAND_CURSOR
   else:
-    pg.mouse.set_cursor(*DEFAULT_CURSOR)
+    cursor = DEFAULT_CURSOR
+
+  pg.mouse.set_cursor(*cursor)
     

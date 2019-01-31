@@ -7,6 +7,7 @@ def fromFEN(fen):
 
     parts = fen.split(' ')
     ranks = parts[0].split('/')
+    # TODO: handle rest of FEN string
     board = []
     for r in range(0, len(ranks)):
         rank = ranks[r]
@@ -19,18 +20,18 @@ def fromFEN(fen):
                 num_spaces = int(sq)
                 for i in range(0, num_spaces):
                     _x = i
-                    row.append(get_square_props(_x, _y))
+                    row.append(get_props(_x, _y))
             else:
-                row.append(get_square_props(_x, _y, sq))
+                row.append(get_props(_x, _y, sq))
         board.append(row)
-        
+
     return board
 
 def valid_FEN(fen_str):
     fen_form = r"^\s*([rnbqkpRNBQKP1-8]+\/){7}([rnbqkpRNBQKP1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])"
     return re.match(fen_form, fen_str) is not None
 
-def get_square_props(_x, _y, role=None):
+def get_props(_x, _y, role=None):
     square_props = { 
         '_x': _x, 
         '_y': _y }
