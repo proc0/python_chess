@@ -2,7 +2,9 @@ from src.piece import Piece
 import re
 
 def fromFEN(fen):
-    # TODO: check FEN form (regex?)
+    if(not valid_FEN(fen)):
+        raise ValueError("Invalid FEN string.")
+
     parts = fen.split(' ')
     ranks = parts[0].split('/')
     board = []
@@ -21,7 +23,12 @@ def fromFEN(fen):
             else:
                 row.append(get_square_props(_x, _y, sq))
         board.append(row)
+        
     return board
+
+def valid_FEN(fen_str):
+    fen_form = r"^\s*([rnbqkpRNBQKP1-8]+\/){7}([rnbqkpRNBQKP1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])"
+    return re.match(fen_form, fen_str) is not None
 
 def get_square_props(_x, _y, role=None):
     square_props = { 

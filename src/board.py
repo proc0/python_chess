@@ -12,7 +12,7 @@ from src.FEN import fromFEN
 LIGHT = (255,255,255)
 DARK = (50,50,50)
 
-START_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+START_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 class Board:
   squares = []
