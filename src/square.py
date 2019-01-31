@@ -10,8 +10,8 @@ class Square:
     for k, v in props.items():
       setattr(self, k, v)
     self.surface = Surface((self.size, self.size))
+    self.font = pg.font.SysFont('Serif', self.font_size)
     self.fresh = False
-    self.settings = { 'draw_coords': False, 'draw_rankfile': True }
 
   def draw(self):
     if(self.hover):
@@ -20,29 +20,30 @@ class Square:
     else:
       self.surface.fill(self.color)
 
+    self.draw_coords()
+    
     if(self.piece):
       self.piece.draw()
       self.surface.blit(self.piece.surface, self.get_piece_bounds())
     
-    self.draw_coords()
     self.fresh = True
 
     return self.surface
 
   def draw_coords(self):
-    font = pg.font.SysFont('Arial', self.font_size)
-    font_surface = None
+    label = None
     if(self.settings['draw_coords']):
-      font_surface = font.render(self.label, False, self.text_color)
+      label = self.label
     elif(self.settings['draw_rankfile']):
       if(self.label == 'A1'):
-        font_surface = font.render(self.label, False, self.text_color)
+        label = self.label
       elif(self.rank):
-        font_surface = font.render(self.rank, False, self.text_color)
+        label = self.rank
       elif(self.file):
-        font_surface = font.render(self.file, False, self.text_color)
+        label = self.file
 
-    if(font_surface):
+    if(label):
+      font_surface = self.font.render(label, False, self.text_color)
       self.surface.blit(font_surface, (self.pad, self.size - (self.pad + self.font_size)))
 
   def get_piece_bounds(self):

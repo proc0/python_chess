@@ -41,7 +41,7 @@ class Board:
 
   def draw(self, square = None):
     sq_pad = 8
-    font_size = 10
+    font_size = 14
 
     fen_model = fromFEN(START_BOARD)
 
@@ -81,7 +81,11 @@ class Board:
             'text_color': LIGHT if toggle_color else DARK,
             'label': str(chr(73-(_y+1))) + str(_x+1),
             'file': str(_x+1) if _y == 7 else None,
-            'rank': str(chr(73-(_y+1))) if _x == 0 else None
+            'rank': str(chr(73-(_y+1))) if _x == 0 else None,
+            'settings': { 
+              'draw_coords': False,
+              'draw_rankfile': True
+            }
           })
           square.draw()
           row.append(square)
