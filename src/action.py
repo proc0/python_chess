@@ -59,14 +59,14 @@ def update(board, action, event, player):
     # player.move(square)
 
   elif(action == actions.JUMP):
-    active = board.square(None, { 'active': True })
-    square.place_piece(active.piece)
+    actuar = board.square(None, { 'active': True })
+    square.place_piece(actuar.piece)
     square.hover = True
-    active.piece = None
-    active.hover = False
-    active.active = False
     square.fresh = False
-    active.fresh = False
+    actuar.active = False
+    actuar.hover = False
+    actuar.fresh = False
+    actuar.piece = None
 
   elif(action == actions.CLEAR):
     for row in board.squares:
