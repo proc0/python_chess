@@ -37,6 +37,8 @@ class Game():
     is_leftclick = event.button == 1
     if(is_leftclick and board.square(event.pos).within(event.pos) and not player.piece):
       action = actions.GRAB
+    elif(is_leftclick and board.square(None, { 'active': True })):
+      action = actions.JUMP
     else:
       action = actions.IDLE
     return action

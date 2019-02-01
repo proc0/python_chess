@@ -25,9 +25,27 @@ class Board:
   def within(self, pos):
     return pos[0] < self.size[0] and pos[1] < self.size[1]
 
-  def square(self, pos):
-    point = lambda i: floor(pos[i]/self.sq_size)
-    return self.squares[point(1)][point(0)]
+  def square(self, pos = None, query = None):
+    squar = None
+    if(pos):
+      point = lambda i: floor(pos[i]/self.sq_size)
+      squar = self.squares[point(1)][point(0)]
+    if(query):
+      match = True
+      for k, v in query.items():
+        if(squar):
+          match = v and getattr(squar, k)
+        else:
+          for rank in self.squares:
+            for sq in rank:
+              squar = sq if v and getattr(sq, k) else None
+              if(squar):
+                break
+            if(squar):
+              break
+
+      squar = squar if match else None
+    return squar
 
   def update(self):
     for row in self.squares:
@@ -67,6 +85,7 @@ class Board:
               'size': self.sq_size - (sq_pad*2),
               'role': sq['piece']['role'],
               'color': sq['piece']['color'],
+              'path': []
             })
           square = Square({
             'size': self.sq_size,

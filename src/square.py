@@ -5,6 +5,7 @@ class Square:
   piece = None
   surface = None
   hover = False
+  active = False
 
   def __init__(self, props):
     for k, v in props.items():
@@ -14,7 +15,7 @@ class Square:
     self.fresh = False
 
   def draw(self):
-    if(self.hover):
+    if(self.hover or self.active):
       self.surface.fill(self.color)
       self.highlight()
     else:
