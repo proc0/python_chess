@@ -27,10 +27,7 @@ def update(board, action, event, player):
   update_cursor(action)
 
   if(action == actions.HOVER):
-    for row in board.squares:
-      for sq in row:
-        sq.hover = False
-        sq.fresh = False
+    board.clear()
     square.hover = True
     square.fresh = False
 
@@ -43,14 +40,11 @@ def update(board, action, event, player):
     player.piece = drag_piece(event.pos, player.piece)
 
   elif(action == actions.DROP):
-    print(player.history)
+    # print(player.history)
     square.place_piece(player.piece)
     if(len(player.piece.path) > 0 and player.piece.path[-1] == square):
       player.piece.path.pop()
-      for row in board.squares:
-        for sq in row:
-          sq.active = False
-          sq.fresh = False
+      board.clear()
       square.active = True      
     else: 
       square.active = False
@@ -69,10 +63,7 @@ def update(board, action, event, player):
     actuar.piece = None
 
   elif(action == actions.CLEAR):
-    for row in board.squares:
-      for sq in row:
-        sq.fresh = False
-        sq.hover = False
+    board.clear()
 
   return board, player
 

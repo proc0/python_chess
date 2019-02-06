@@ -15,6 +15,7 @@ class Square:
     self.fresh = False
 
   def draw(self):
+    print(self.label)
     if(self.hover or self.active):
       self.surface.fill(self.color)
       self.highlight()

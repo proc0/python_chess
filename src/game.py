@@ -22,6 +22,7 @@ class Game():
     if(len(board.squares) == 0):
       self.display.blit(board.draw(), board.surface.get_rect())
     else:
+      print('draw')
       self.display.blit(board.update(), board.surface.get_rect())
       if(player.piece):
         self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
@@ -50,7 +51,7 @@ class Game():
     elif(board.square(event.pos).within(event.pos)):
       action = actions.HOVER
     else:
-      action = actions.CLEAR
+      action = actions.IDLE
     return action
 
   def run(self, ui, board, players):

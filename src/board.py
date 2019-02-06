@@ -25,6 +25,12 @@ class Board:
   def within(self, pos):
     return pos[0] < self.size[0] and pos[1] < self.size[1]
 
+  def clear(self):
+    for row in self.squares:
+      for sq in row:
+        sq.fresh = False
+        sq.hover = False
+
   def square(self, pos = None, query = None):
     squar = None
     if(pos):
