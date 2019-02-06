@@ -51,7 +51,7 @@ class Game():
     elif(board.square(event.pos).within(event.pos)):
       action = actions.HOVER
     else:
-      action = actions.IDLE
+      action = actions.CLEAR
     return action
 
   def run(self, ui, board, players):
@@ -71,17 +71,15 @@ class Game():
           if(board.within(event.pos)):
             input = getattr(self, pg_event)
             action = input(board, event, player)
-            # should_clear = action == actions.CLEAR and not cleared
             if(action != actions.IDLE):
-              # print(action)
+              print(action)
               # update game
               board, player = update(board, action, event, player)
               # draw game
               self.draw(board, player)
               # flip display
               pg.display.flip()
-              # TODO: refactor event optim
-              # cleared = action == actions.CLEAR
+
       # debug
       fps = int(clock.get_fps())
       # update ui
