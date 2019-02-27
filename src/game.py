@@ -72,14 +72,12 @@ class Game():
             input = getattr(self, pg_event)
             action = input(board, event, player)
             if(action != actions.IDLE):
-              print(action)
               # update game
               board, player = update(board, action, event, player)
               # draw game
               self.draw(board, player)
-              # flip display
+              # pg update
               pg.display.flip()
-
       # debug
       fps = int(clock.get_fps())
       # update ui
