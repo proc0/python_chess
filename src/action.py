@@ -40,7 +40,6 @@ def update(board, action, event, player):
     player.piece = drag_piece(event.pos, player.piece)
 
   elif(action == actions.DROP):
-    # print(player.history)
     square.place_piece(player.piece)
     if(len(player.piece.path) > 0 and player.piece.path[-1] == square):
       player.piece.path.pop()
@@ -50,7 +49,6 @@ def update(board, action, event, player):
       square.active = False
       square.hover = False
     player.piece = None
-    # player.move(square)
 
   elif(action == actions.JUMP):
     actuar = board.square(None, { 'active': True })

@@ -22,10 +22,9 @@ class Game():
     if(len(board.squares) == 0):
       self.display.blit(board.draw(), board.surface.get_rect())
     else:
-      print('draw')
       self.display.blit(board.update(), board.surface.get_rect())
-      if(player.piece):
-        self.display.blit(player.piece.surface, (player.piece.x,  player.piece.y))
+      pp = player.piece # player moving piece
+      if(pp): self.display.blit(pp.surface, (pp.x,  pp.y))
 
   def MouseButtonUp(self, board, event, player):
     if(player.piece):
