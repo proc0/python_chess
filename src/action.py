@@ -21,7 +21,7 @@ def drag_piece(pos, piece):
   piece.y = pos[1] - piece_rect[3]/2
   return piece
 
-def update(board, action, event, player):
+def update(board, player, action, event):
   square = board.square(event.pos)
 
   update_cursor(action)

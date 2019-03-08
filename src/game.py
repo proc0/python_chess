@@ -72,7 +72,7 @@ class Game():
             action = input(board, event, player)
             if(action != actions.IDLE):
               # update game
-              board, player = update(board, action, event, player)
+              board, player = update(board, player, action, event)
               # draw game
               self.draw(board, player)
               # pg update
